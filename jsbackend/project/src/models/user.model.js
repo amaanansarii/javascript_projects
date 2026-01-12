@@ -1,6 +1,8 @@
 import mongoose from "mongoose";
 import { Schema } from "mongoose";
 
+//bcrypt use to encode our passwords
+
 const userSchema = new Schema({
     username: {
         type: String,
