@@ -73,10 +73,7 @@ userSchema.methods.generateAccessToken = function() {
 
 userSchema.methods.generateRefreshToken = function(){
     const jwtPayload = {
-        _id: this._id,
-        email: this.email,
-        username: this.username,
-        fullName: this.fullName
+        _id: this._id
     }
     const expiresIn = { expiresIn : process.env.REFRESH_TOKEN_EXPIRY}
     return jwt.sign(jwtPayload, process.env.REFRESH_TOKEN_SECRET, expiresIn) 
