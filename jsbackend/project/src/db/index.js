@@ -6,10 +6,9 @@ import DB_NAME from "../contants.js"
 
 const connectDB = async () => {
     try {
-        console.log("mongo")
         const connectionInstance = await mongoose.connect(`${process.env.MONGODB_URI}/${DB_NAME}`)
-        console.log("mongo connected")
-        console.log(`mongodb connect !! DB HOST : ${connectionInstance.connection.host}`);
+                console.log(`mongodb connect !! DB HOST : ${connectionInstance.connection.host}`);
+
     } catch (error) {
         console.log("mongo connnection error", error)
         process.exit(1)
