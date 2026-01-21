@@ -1,6 +1,7 @@
 import { asyncHandler } from "../utils/asyncHandler.js"
 import {ApiError} from "../utils/ApiError.js"
 import {User} from "../models/user.model.js"
+import {uploadOnCloudindary} from "../utils/cloudinary.js"
 
 const registerUser = asyncHandler( async (req, res) => {
 
@@ -23,8 +24,9 @@ const registerUser = asyncHandler( async (req, res) => {
     //make request with object email and password in postman
 
     //use details from frontend
+
+    console.log(req.body, "---req body in usercontroller")
     const {fullName, username, email, password} = req.body
-    console.log("email",email)
 
     //one of the method to validate but it can be validate using different method advanced method
     // if(fullName === ""){
@@ -45,6 +47,31 @@ const registerUser = asyncHandler( async (req, res) => {
         throw new ApiError(409, "User with email or username already exist")
     }
 
+    console.log(req.files,"req files")
+    //upload middle ware multer hume req.body k andar or chize add krke deta h gives req.files ka access
+    const avatarLocalPath = req.files?.avatar[0]?.path;
+    const coverImageLocalPath = req.files?.coverImage[0]?.path;
+
+    if(!avatarLocalPath) {
+        throw new ApiError(400, "Avatar file is required!")
+    }
+
+    const avatar = await uploadOnCloudindary(avatarLocalPath);
+    const coverImage = await uploadOnCloudindary(coverImageLocalPath);
+
+    if(!avatar){
+        throw new ApiError(400, "Avatar file is required.")
+    }
+
+    User.create({
+        fullName, 
+        avatar: avatar.url,
+        coverImage: coverImage?.url || "",
+        email,
+        password,
+        username: username.toLowerCase()
+
+    })
     
 
     res.status(200).json({message: "ok"})
