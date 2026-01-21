@@ -34,7 +34,11 @@ const registerUser = asyncHandler( async (req, res) => {
     // check for user creation
     // return res
 
-    const {fullName, username, email} = req.body
+
+    //make request with object email and password in postman
+
+    //use details from frontend
+    const {fullName, username, email, password} = req.body
     console.log("email",email)
 
     
