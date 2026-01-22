@@ -1,8 +1,7 @@
 import mongoose from "mongoose";
 import { Schema } from "mongoose";
 import bcrypt from "bcrypt";
-import { jwt } from "jsonwebtoken";
-
+import jwt from "jsonwebtoken"
 //bcrypt use to encode our passwords
 
 const userSchema = new Schema({
@@ -50,10 +49,10 @@ const userSchema = new Schema({
 }, {timestamps: true})
 
 userSchema.pre("save", async function (next) { // pre used to perform any function before saving the password worked as a middle ware
-    if(!this.isModified("password")) return next(); // this will check password is modified or not if it is not modified then return next and if it is modified then bcrypt it below.
+    if(!this.isModified("password")) return next; // this will check password is modified or not if it is not modified then return next and if it is modified then bcrypt it below.
 
     this.password = await bcrypt.hash(this.password, 10) // use to hash or bcrypt the password
-    next()
+    next
 })
 
 userSchema.methods.isPasswordCorrect = async function (password) { // this will check the current passowrd and the password this is hashed are same or not

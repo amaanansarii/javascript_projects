@@ -41,7 +41,7 @@ const registerUser = asyncHandler( async (req, res) => {
         throw new ApiError(400, "All fields are required")
     }
 
-    const existedUser = User.findOne({
+    const existedUser = await User.findOne({
         $or: [{ username }, { email }]
     })
 
@@ -86,6 +86,8 @@ const registerUser = asyncHandler( async (req, res) => {
     return res.status(201), json(
         new ApiResponse(200, createdUser, "user registered successfully")
     )
+
+    //api call in postman using form-data with all the key values like username full name password etc.
 
     // res.status(200).json({message: "ok"})
 });
