@@ -52,7 +52,14 @@ const registerUser = asyncHandler( async (req, res) => {
     console.log(req.files,"req files")
     //upload middle ware multer hume req.body k andar or chize add krke deta h gives req.files ka access
     const avatarLocalPath = req.files?.avatar[0]?.path;
-    const coverImageLocalPath = req.files?.coverImage[0]?.path;
+    // const coverImageLocalPath = req.files?.coverImage[0]?.path;
+
+    let coverImageLocalPath;
+    if(req.files && Array.isArray(req.files.coverImage) && req.files.coverImage.length > 0){
+        coverImageLocalPath  = req.files.coverImage[0].path;
+    }
+
+    // or another thing is below to check file is present or not
 
     if(!avatarLocalPath) {
         throw new ApiError(400, "Avatar file is required!")
