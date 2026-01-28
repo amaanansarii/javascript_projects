@@ -3,7 +3,21 @@ import {ApiError} from "../utils/ApiError.js"
 import {User} from "../models/user.model.js"
 import {uploadOnCloudindary} from "../utils/cloudinary.js"
 import { ApiResponse } from "../utils/ApiResponse.js"
-import { json } from "express"
+
+const generateAccessandRefreshTokens = async(userId) => {
+    try {
+        const user = await User.findById(userId)
+        const accessToken = user.generateAccessToken()
+        const refreshToken = user.generateRefreshToken()
+
+        user.refreshToken = refreshToken
+        await user.save({validateBeforeSave: false})
+
+        return {accessToken, refreshToken}
+    } catch (error) {
+        throw new ApiError(500, "Internal Server Error, went wrong while generating refresh and access token")
+    }
+}
 
 const registerUser = asyncHandler( async (req, res) => {
 
@@ -99,7 +113,49 @@ const registerUser = asyncHandler( async (req, res) => {
     // res.status(200).json({message: "ok"})
 });
 
-export { registerUser }
+const logInUser = asyncHandler( async (req, res) => {
+    //frontend se values leni hain req.body se data
+    //username or email base pr login
+    //find the user in database
+    //password check
+    //access and refreshtoken generate and send to user
+    //send cookies in frontend
+    //response bhejdo
+
+
+    //database se un values ko match krana h validate krana h 
+    //redirect krdena h ui page pr
+
+    const {email, username, password} = req.body;
+
+    if(!username || !email) {
+        throw new ApiError(400, "username or email is required!!")
+    }
+
+    const user = await User.findOne({
+        $or: [{username}, {email}]
+    })
+
+    if(!user){
+        throw new ApiError(404, "Bad Request user does not exist!")
+    }
+
+    const isPasswordValid =  await user.isPasswordCorrect(password)
+
+    if(!isPasswordValid){
+        throw new ApiError(401, "invalid user credentials")
+    }
+
+    const {accessToken, refreshToken} = await generateAccessandRefreshTokens(user._id)
+
+    const loggedInUser = await User.findById(user._id).select("-password -refres")
+
+    const options = {
+        httpOnly: true,
+    }
+
+})
+export { registerUser, logInUser }
 
 
 

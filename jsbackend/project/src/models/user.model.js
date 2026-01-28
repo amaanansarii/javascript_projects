@@ -59,7 +59,7 @@ userSchema.methods.isPasswordCorrect = async function (password) { // this will 
     return await bcrypt.compare(password, this.password)
 }
 
-userSchema.methods.generateAccessToken = function() {
+userSchema.methods.generateAccessToken = function() { //these schema methods are our personal methods that we have created to do the particular task
     const jwtPayload = {
         _id: this._id,
         email: this.email,
