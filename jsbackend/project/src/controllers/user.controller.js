@@ -167,6 +167,9 @@ const logInUser = asyncHandler( async (req, res) => {
 })
 
 const logOutUser = asyncHandler( async (req, res) => {
+    //remove cookies
+    //remove refreshtoken
+
     
 })
 
